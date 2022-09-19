@@ -1,0 +1,11 @@
+-BEGIN HEADER-
+NASA/POWER CERES/MERRA2 Native Resolution Monthly and Annual 
+Dates (month/day/year): 01/01/2021 through 12/31/2021 
+Location: Latitude  38.0413   Longitude -121.0862 
+Elevation from MERRA-2: Average for 0.5 x 0.625 degree lat/lon region = 97.83 meters
+The value for missing source data that cannot be computed or is outside of the sources availability range: -999 
+Parameter(s): 
+GWETTOP     MERRA-2 Surface Soil Wetness (1) 
+-END HEADER-
+PARAMETER,YEAR,JAN,FEB,MAR,APR,MAY,JUN,JUL,AUG,SEP,OCT,NOV,DEC,ANN
+GWETTOP,2021,0.45,0.55,0.52,0.43,0.32,0.16,0.1,0.09,0.1,0.27,0.53,0.62,0.34
