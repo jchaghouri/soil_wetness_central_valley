@@ -8,6 +8,8 @@ from streamlit_folium import folium_static
 import sqlite3
 import time
 import matplotlib.pyplot as plt
+import statsmodels
+
 conn = sqlite3.connect('soil_test_database')
 c = conn.cursor()
 
