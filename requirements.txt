@@ -3,4 +3,3 @@ pandas==1.4.2
 matplotlib==3.5.1
 sklearn==0.0
 folium==0.13.0
-sqlite3 ==2.3.2
