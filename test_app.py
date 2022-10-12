@@ -80,7 +80,7 @@ with tab1:
         st.write('Hover your cursor over the county you want to see the Surface Soil Wetness value for.')
         
         
-        st.write('The data you chose to view is the Annual Average soil wetness for', time)
+        st.write('The data you chose to view is the Annual Average Surface Soil Wetness for', time)
 
 
         m = folium.Map(location=[37, -120], zoom_start=5.5,tiles=None)
@@ -143,7 +143,13 @@ with tab1:
         df =df[df['YEAR']==time]
         df =df.loc[:,('COUNTYFP','YEAR',month,"Name",'geometry')]
 
-        st.write('The month is', month)
+        st.write('You chose', month)
+        
+        st.write('Hover your cursor over the county you want to see the Surface Soil Wetness value for.')
+        
+        
+        st.write('The data you chose to view is the Surface Soil Wetness for ', month, time)
+
 
 
 
