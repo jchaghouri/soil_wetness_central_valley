@@ -9,7 +9,7 @@ import sqlite3
 import time
 import matplotlib.pyplot as plt
 import statsmodels
-
+import branca
 conn = sqlite3.connect('soil_test_database')
 c = conn.cursor()
 
@@ -73,6 +73,7 @@ with tab1:
 
     if (month == 'Annual Average'):
         df =combineddf[['county_fips_id', 'Name','YEAR','Annual Average','geometry' ]]
+       
         df = df[df['YEAR']==time]
         st.write('You chose Annual Average')
         
@@ -82,8 +83,9 @@ with tab1:
         st.write('The data you chose to view is the Annual Average soil wetness for', time)
 
 
-        m = folium.Map(location=[40, -100], zoom_start=4,tiles=None)
+        m = folium.Map(location=[37, -120], zoom_start=5.5,tiles=None)
         folium.TileLayer('CartoDB positron',name="Light Map",control=False).add_to(m)
+       # custom_scale = (df['Annual Average'].quantile((0., 0.3, 0.7 ,0.8 ,0.9 ,1. ))).tolist()
 
 
 
@@ -93,9 +95,10 @@ with tab1:
             geo_data='county_ca.geojson',     #This is the geojson file for the Unite States
             name='Choropleth Map of Central Valley Soil Wetness',
             data=df,                                  #This is the dataframe we created in the data preparation step
-            columns=['Name', month],                #'state code' and 'metrics' are the two columns in the dataframe that we use to grab the data for each state and plot it in the choropleth map
-            key_on='feature.properties.COUNTYFP',             #This is the key in the geojson file that we use to grab the geometries for each state in order to add the geographical boundary layers to the map
-            fill_color = 'YlGnBu',
+            columns=['county_fips_id', month],                #'state code' and 'metrics' are the two columns in the dataframe that we use to grab the data for each state and plot it in the choropleth map
+            key_on='feature.properties.COUNTYFP',     #This is the key in the geojson file that we use to grab the geometries for each state in order to add the geographical boundary layers to the map
+          #  threshold_scale = custom_scale,
+            fill_color = 'YlGn',
             nan_fill_color="grey",
             fill_opacity=0.7,
             line_opacity=0.2,
@@ -126,10 +129,16 @@ with tab1:
                            max_width=800,),
                             highlight_function=lambda x: {'weight':3,'fillColor':'blue'},
                            ).add_to(m) 
+        colormap = branca.colormap.linear.YlGn_09.scale(0, 1)
+        colormap = colormap.to_step(index=[0., .1,.2,.3,.4,.5,.6, 0.7 ,0.8 ,0.9 ,1.])
+        colormap.caption = 'Surface Soil Wetness'
+        colormap.add_to(m)
+
         folium_static(m)
 
     else:
-
+        
+        
         df = combineddf[['COUNTYFP','YEAR','January','February', 'March', 'April','May','June','July','August','September','October','November','December','Name','geometry']]
         df =df[df['YEAR']==time]
         df =df.loc[:,('COUNTYFP','YEAR',month,"Name",'geometry')]
@@ -140,8 +149,10 @@ with tab1:
 
 
         #Initiate a folium map
-        m = folium.Map(location=[40, -100], zoom_start=4,tiles=None)
+        m = folium.Map(location=[37, -120], zoom_start=5.5,tiles=None)
         folium.TileLayer('CartoDB positron',name="Light Map",control=False).add_to(m)
+     
+        #custom_scale = (df[month].quantile((0., 0.3, 0.7 ,0.8 ,0.9 ,1. ))).tolist()
 
 
 
@@ -151,9 +162,11 @@ with tab1:
             geo_data='county_ca.geojson',     #This is the geojson file for the Unite States
             name='Choropleth Map of Central Valley Soil Wetness',
             data=df,                                  #This is the dataframe we created in the data preparation step
-            columns=['Name', month],                #'state code' and 'metrics' are the two columns in the dataframe that we use to grab the data for each state and plot it in the choropleth map
+            columns=['COUNTYFP', month],                #'state code' and 'metrics' are the two columns in the dataframe that we use to grab the data for each state and plot it in the choropleth map
             key_on='feature.properties.COUNTYFP',             #This is the key in the geojson file that we use to grab the geometries for each state in order to add the geographical boundary layers to the map
-            fill_color = 'YlGnBu',
+          #  threshold_scale = custom_scale,
+
+            fill_color = 'YlGn',
             nan_fill_color="grey",
             fill_opacity=0.7,
             line_opacity=0.2,
@@ -184,6 +197,11 @@ with tab1:
                            max_width=800,),
                             highlight_function=lambda x: {'weight':3,'fillColor':'blue'},
                            ).add_to(m) 
+        colormap = branca.colormap.linear.YlGn_09.scale(0, 1)
+        colormap = colormap.to_step(index=[0., .1,.2,.3,.4,.5,.6, 0.7 ,0.8 ,0.9 ,1.])
+        colormap.caption = 'Surface Soil Wetness'
+        colormap.add_to(m)
+        
         folium_static(m)
 
 
