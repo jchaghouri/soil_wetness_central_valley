@@ -24,7 +24,7 @@ c.execute('''
 SELECT * 
 FROM counties
           ''')
-
+st.header("Surface Soil Wetness in California by County")
 with st.sidebar:
     
     st.markdown("**Data:**")
@@ -62,7 +62,6 @@ tab1, tab2 = st.tabs(["Map Visualization", "Time Series Analysis"])
 
 
 with tab1:
-    st.header("Map Visualization of Surface Soil Wetness")
     
 
 
