@@ -9,7 +9,7 @@ import sqlite3
 import time
 import matplotlib.pyplot as plt
 import statsmodels
-
+import branca 
 conn = sqlite3.connect('soil_test_database')
 c = conn.cursor()
 
@@ -63,8 +63,6 @@ tab1, tab2 = st.tabs(["Map Visualization", "Time Series Analysis"])
 
 with tab1:
     st.header("Map Visualization of Surface Soil Wetness")
-    
-
 
     time = st.selectbox('Choose a year:', (2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021))
     st.write('The year is ', time)
@@ -82,10 +80,10 @@ with tab1:
         st.write('The data you chose to view is the Annual Average soil wetness for', time)
 
 
-        m = folium.Map(location=[40, -100], zoom_start=4,tiles=None)
+        m = folium.Map(location=[37, -120], zoom_start=5,tiles=None)
         folium.TileLayer('CartoDB positron',name="Light Map",control=False).add_to(m)
 
-
+        #custom_scale = (wetness['Annual Average'].quantile((0.1,.2,.3,.4,.5,.6, .7, .8, .9, 1))).tolist()
 
 
         #Plot Choropleth map using folium
@@ -93,9 +91,11 @@ with tab1:
             geo_data='county_ca.geojson',     #This is the geojson file for the Unite States
             name='Choropleth Map of Central Valley Soil Wetness',
             data=df,                                  #This is the dataframe we created in the data preparation step
-            columns=['Name', month],                #'state code' and 'metrics' are the two columns in the dataframe that we use to grab the data for each state and plot it in the choropleth map
+            
+            #threshold_scale=custom_scale,
+            columns=['county_fips_id',month],                #'state code' and 'metrics' are the two columns in the dataframe that we use to grab the data for each state and plot it in the choropleth map
             key_on='feature.properties.COUNTYFP',             #This is the key in the geojson file that we use to grab the geometries for each state in order to add the geographical boundary layers to the map
-            fill_color = 'YlGnBu',
+            fill_color = 'YlGn',
             nan_fill_color="grey",
             fill_opacity=0.7,
             line_opacity=0.2,
@@ -126,6 +126,11 @@ with tab1:
                            max_width=800,),
                             highlight_function=lambda x: {'weight':3,'fillColor':'blue'},
                            ).add_to(m) 
+        colormap = branca.colormap.linear.YlGn_09.scale(0,1)
+        colormap = colormap.to_step(index=[0,.1,.2,.3,.4,.5,.6, .7, .8, .9,1])
+        colormap.caption = 'Soils Sufrace Wetness'
+        colormap.add_to(m)
+
         folium_static(m)
 
     else:
@@ -140,7 +145,7 @@ with tab1:
 
 
         #Initiate a folium map
-        m = folium.Map(location=[40, -100], zoom_start=4,tiles=None)
+        m = folium.Map(location=[37, -120], zoom_start=5,tiles=None)
         folium.TileLayer('CartoDB positron',name="Light Map",control=False).add_to(m)
 
 
@@ -151,9 +156,9 @@ with tab1:
             geo_data='county_ca.geojson',     #This is the geojson file for the Unite States
             name='Choropleth Map of Central Valley Soil Wetness',
             data=df,                                  #This is the dataframe we created in the data preparation step
-            columns=['Name', month],                #'state code' and 'metrics' are the two columns in the dataframe that we use to grab the data for each state and plot it in the choropleth map
+            columns=['COUNTYFP', month],                #'state code' and 'metrics' are the two columns in the dataframe that we use to grab the data for each state and plot it in the choropleth map
             key_on='feature.properties.COUNTYFP',             #This is the key in the geojson file that we use to grab the geometries for each state in order to add the geographical boundary layers to the map
-            fill_color = 'YlGnBu',
+            fill_color = 'YlGn',
             nan_fill_color="grey",
             fill_opacity=0.7,
             line_opacity=0.2,
@@ -184,6 +189,10 @@ with tab1:
                            max_width=800,),
                             highlight_function=lambda x: {'weight':3,'fillColor':'blue'},
                            ).add_to(m) 
+        colormap = branca.colormap.linear.YlGn_09.scale(0,1)
+        colormap = colormap.to_step(index=[0,.1,.2,.3,.4,.5,.6, .7, .8, .9,1])
+        colormap.caption = 'Soils Sufrace Wetness'
+        colormap.add_to(m)
         folium_static(m)
 
 
