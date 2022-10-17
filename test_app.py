@@ -212,6 +212,11 @@ with tab1:
 
 
 with tab2:
+    st.write("Displayed below is four different plots,Observed, Trend, Seasonal, and Residual. This time series analysis was done using ***seasonal_decompose*** in the *StatModel* package in Python. The model used for these plots is multiplicative.")
+    st.write("***Observed***: This plot displays the Surface Soil Wetness for your chosen county with years on the x-axis and wetness value on the y-axis.")
+    st.write("***Trend***: Shows a pattern in data that shows the movement of a series to relatively higher or lower values over a long period of time. In other words, a trend is observed when there is an increasing or decreasing slope in the time series. This is the integral of the ***Observed*** plot, so this shows the yearly wetness and whether it is going down or up from the previous year.")
+    st.write("***Seasonal***: This is the pattern of our data, in this case the seasonality plot for each county looks like a sine wave. This is because the rain season happens every November-February so the seasonal pattern is sinusoidal.")
+    st.write("***Residual***: The residual is what is left. There are patterns that do not fit in the trend and they are put here in the remainder.")
     countyname =  st.selectbox('Choose a county:', ('Alameda',
      'Alpine',
      'Humboldt',
@@ -361,11 +366,24 @@ with tab2:
 
     decompose_result_mult = seasonal_decompose(analysis, model="multiplicative")
 
+    observed = decompose_result_mult.observed
     trend = decompose_result_mult.trend
     seasonal = decompose_result_mult.seasonal
     residual = decompose_result_mult.resid
 
-    fig = decompose_result_mult.plot()
-    fig.set_size_inches((15,15))
+    fig,ax = plt.subplots(4)
+    fig.suptitle('Seasonal Decomposed Time Series Analysis')
+    ax[0].plot(observed)
+    ax[0].set_title('Observed')
+
+    ax[1].plot(trend)
+    ax[1].set_title("Trend")
+
+    ax[2].plot(seasonal)
+    ax[2].set_title("Seasonal")
+
+    ax[3].plot(residual)
+    ax[3].set_title("Residual")
+    fig.set_size_inches((10,10))
     fig.tight_layout()
     st.pyplot(fig)
